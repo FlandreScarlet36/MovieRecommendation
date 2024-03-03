@@ -110,7 +110,7 @@ class ItemBasedCF():
                     continue
                 rank.setdefault(related_movie, 0)
                 rank[related_movie] += self.add_noise(rating * w)
-        return dict(sorted(rank.items(), key=itemgetter(1), reverse=True)[:N])
+        return sorted(rank.items(), key=itemgetter(1), reverse=True)[:N]
 
 
     # 产生推荐并通过准确率、召回率和覆盖率进行评估
