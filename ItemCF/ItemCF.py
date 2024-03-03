@@ -2,7 +2,7 @@
 
 # 基于项目的协同过滤推荐算法实现
 import random
-
+import numpy as np
 import math
 from operator import itemgetter
 
@@ -23,9 +23,15 @@ class ItemBasedCF():
         self.movie_popular = {}
         self.movie_count = 0
 
+        # 噪声的标准差
+        self.b = 1.0
+
         print('Similar movie number = %d' % self.n_sim_movie)
         print('Recommneded movie number = %d' % self.n_rec_movie)
+    
 
+    def add_noise(self, rating):
+        return rating + np.random.laplace(0, self.b)
 
     # 读文件得到“用户-电影”数据
     def get_dataset(self, filename, pivot=0.75):
@@ -35,10 +41,12 @@ class ItemBasedCF():
             user, movie, rating, timestamp = line.split(',')
             if(random.random() < pivot):
                 self.trainSet.setdefault(user, {})
+                rating = float(rating)
                 self.trainSet[user][movie] = rating
                 trainSet_len += 1
             else:
                 self.testSet.setdefault(user, {})
+                rating = float(rating)
                 self.testSet[user][movie] = rating
                 testSet_len += 1
         print('Split trainingSet and testSet success!')
@@ -74,7 +82,7 @@ class ItemBasedCF():
                         continue
                     self.movie_sim_matrix.setdefault(m1, {})
                     self.movie_sim_matrix[m1].setdefault(m2, 0)
-                    self.movie_sim_matrix[m1][m2] += 1
+                    self.movie_sim_matrix[m1][m2] += self.add_noise(1 / math.log(1 + len(movies)))
         print("Build co-rated users matrix success!")
 
         # 计算电影之间的相似性
@@ -101,8 +109,8 @@ class ItemBasedCF():
                 if related_movie in watched_movies:
                     continue
                 rank.setdefault(related_movie, 0)
-                rank[related_movie] += w * float(rating)
-        return sorted(rank.items(), key=itemgetter(1), reverse=True)[:N]
+                rank[related_movie] += self.add_noise(rating * w)
+        return dict(sorted(rank.items(), key=itemgetter(1), reverse=True)[:N])
 
 
     # 产生推荐并通过准确率、召回率和覆盖率进行评估
