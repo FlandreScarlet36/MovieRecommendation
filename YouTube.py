@@ -1,12 +1,13 @@
 ####################### load packages #####################
 import linecache
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import math
 
 ####################### dataset #####################
-train_file = "dbpedia_csv/dbpedia.train2"
-test_file = "dbpedia_csv/dbpedia.test2"
+train_file = "dbpedia.train"
+test_file = "dbpedia.test"
 
 ######## label字典和词袋字典 ########
 label_dict = {}
@@ -73,7 +74,7 @@ project_embedding = tf.div(tf.reduce_sum(tf.multiply(input_embedding, emb_mask),
 
 
 ######## 网络相关参数 ########
-batch_size = 500
+batch_size = 50
 learning_rate = 0.01
 
 training_epochs = 10
@@ -195,7 +196,8 @@ with tf.Session() as sess:
     #### epoch 世代循环 ####
     total_batch = int(len(train_lst) / batch_size)
     for epoch in range(training_epochs):
-        for i in range(total_batch):
+        for i in range(50):
+        # for i in range(total_batch):
             step += 1
 
             x, y, batch_mask, word_number = read_data(i * batch_size, batch_size, train_lst)
@@ -216,6 +218,12 @@ with tf.Session() as sess:
     test_lst = linecache.getlines(test_file)
     total_batch = int(len(test_lst) / batch_size)
 
+    accuracy_sum = 0  # 初始化准确率的总和
+
     for i in range(total_batch):
         x, y, batch_mask, word_number = read_data(i*batch_size, batch_size, test_lst)
-        print("Testing Accuracy:", sess.run(accuracy, feed_dict={x_batch: x, y_batch: y, emb_mask: batch_mask, word_num: word_number}))
+        batch_accuracy = sess.run(accuracy, feed_dict={x_batch: x, y_batch: y, emb_mask: batch_mask, word_num: word_number})
+        accuracy_sum += batch_accuracy  # 累加每个批次的准确率
+
+    average_accuracy = accuracy_sum / total_batch  # 计算平均准确率
+    print("Average Testing Accuracy:", average_accuracy)
