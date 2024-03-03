@@ -1,0 +1,11 @@
+--2024-03-03 15:20:44--  https://github.com/le-scientifique/torchDatasets/raw/master/dbpedia_csv.tar.gz
+正在解析主机 github.com (github.com)... 20.205.243.166
+正在连接 github.com (github.com)|20.205.243.166|:443... 已连接。
+已发出 HTTP 请求，正在等待回应... 302 Found
+位置：https://raw.githubusercontent.com/le-scientifique/torchDatasets/master/dbpedia_csv.tar.gz [跟随至新的 URL]
+--2024-03-03 15:20:44--  https://raw.githubusercontent.com/le-scientifique/torchDatasets/master/dbpedia_csv.tar.gz
+正在解析主机 raw.githubusercontent.com (raw.githubusercontent.com)... 185.199.109.133, 185.199.110.133, 185.199.108.133, ...
+正在连接 raw.githubusercontent.com (raw.githubusercontent.com)|185.199.109.133|:443... 失败：拒绝连接。
+正在连接 raw.githubusercontent.com (raw.githubusercontent.com)|185.199.110.133|:443... 失败：拒绝连接。
+正在连接 raw.githubusercontent.com (raw.githubusercontent.com)|185.199.108.133|:443... 已连接。
+无法建立 SSL 连接。
