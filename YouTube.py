@@ -23,7 +23,7 @@ def init_data(read_file):
     sku_cnt = 1
 
     ######## 读取文件 ########
-    f = open(read_file, 'r')
+    f = open(read_file, 'r', encoding='utf-8')
     for line in f:
         line = line.strip().split(' ')
 
